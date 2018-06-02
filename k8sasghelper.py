@@ -6,8 +6,7 @@ import sys
 _LOGGER = logging.Logger('k8sasghelper')
 
 from constants import (
-    PROJECT_NAME, ENV_NAME, ETCD_TAG_NAME, MASTER_TAG_NAME,
-    ZONE_ID, SRV_RECORD_NAME, DOMAIN_NAME, SRV_TTL, MV_TTL, ETCD_PORT,
+    PROJECT_NAME, ENV_NAME, MASTER_TAG_NAME,ZONE_ID, DOMAIN_NAME, MV_TTL, 
     EXTERNAL_API_DNS_PREFIX, INTERNAL_API_DNS_PREFIX, LOG_LEVEL
 )
 
@@ -238,14 +237,10 @@ def lambda_handler(event, context):
     config = {
         PROJECT_NAME: os.environ.get(PROJECT_NAME),
         ENV_NAME: os.environ.get(ENV_NAME),
-        ETCD_TAG_NAME: os.environ.get(ETCD_TAG_NAME),
         MASTER_TAG_NAME: os.environ.get(MASTER_TAG_NAME),
         ZONE_ID: os.environ.get(ZONE_ID),
         DOMAIN_NAME: os.environ.get(DOMAIN_NAME),
-        SRV_RECORD_NAME: os.environ.get(SRV_RECORD_NAME),
-        SRV_TTL: os.environ.get(SRV_TTL),
         MV_TTL: os.environ.get(MV_TTL),
-        ETCD_PORT: os.environ.get(ETCD_PORT),
         EXTERNAL_API_DNS_PREFIX: os.environ.get(EXTERNAL_API_DNS_PREFIX, {}),
         INTERNAL_API_DNS_PREFIX: os.environ.get(INTERNAL_API_DNS_PREFIX, {}),
         LOG_LEVEL: os.environ.get(LOG_LEVEL, {})
