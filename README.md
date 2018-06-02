@@ -2,6 +2,9 @@
 
 Lambda Function designed to make life easier when autoscaling etcd and kubernetes masters
 
+## Usage:
+`sls deploy --stage dev --region us-east-2 --r53zoneid ABCD50Q8F48Z0 --r53domain some.domain.com --project arbitraryname`
+
 ## TO DO
 
 * Write better README
