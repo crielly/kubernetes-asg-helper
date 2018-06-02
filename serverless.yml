@@ -1,0 +1,47 @@
+service: "${opt:project}"
+
+provider:
+  name: aws
+  runtime: python3.6
+  stage: ${opt:env, 'dev'}
+  region: ${opt:region, 'us-east-2'}
+  memorySize: 1024
+  stackTags:
+    Name: ${self:service}
+    Environment: ${self:provider.stage}
+    Project: "${opt:project}"
+    Serverless: "True"
+
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:ListBucket"
+        - "ec2:**"
+        - "logs:*"
+        - "kms:Decrypt"
+        - "ssm:*"
+      Resource: "*"
+    - Effect: "Allow"
+      Action:
+        - "route53:*"
+      Resource:
+        Fn::Join:
+          - ""
+          - - "arn:aws:route53:::hostedzone/"
+            - "${opt:r53zoneid}"
+
+  # you can define service wide environment variables here
+  environment:
+    project_name: "${opt:project}"
+    environment: "${opt:env, 'dev'}"
+    master_tag_name: "k8smaster"
+    domain_name: "${opt:r53domain}"
+    r53_zone_id: "${opt:r53zoneid}"
+    multivalue_record_ttl: "60"
+    log_level: "DEBUG"
+    internal_api_dns_prefix: "internal"
+    external_api_dns_prefix: "external"
+
+functions:
+  dnsmanager:
+    handler: k8sasghelper.lambda_handler

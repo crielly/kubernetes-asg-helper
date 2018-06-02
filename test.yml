@@ -1,0 +1,59 @@
+# serverless.yml
+
+service: users
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  stage: dev # Set the default stage used. Default is dev
+  region: us-east-1 # Overwrite the default region used. Default is us-east-1
+  profile: production # The default profile to use with this service
+  memorySize: 512 # Overwrite the default memory size. Default is 1024
+  deploymentBucket:
+    name: com.serverless.${self:provider.region}.deploys # Overwrite the default deployment bucket
+    serverSideEncryption: AES256 # when using server-side encryption
+  versionFunctions: false # Optional function versioning
+  stackTags: # Optional CF stack tags
+   key: value
+  stackPolicy: # Optional CF stack policy. The example below allows updates to all resources except deleting/replacing EC2 instances (use with caution!)
+    - Effect: Allow
+      Principal: "*"
+      Action: "Update:*"
+      Resource: "*"
+    - Effect: Deny
+      Principal: "*"
+      Action:
+        - Update:Replace
+        - Update:Delete
+      Resource: "*"
+      Condition:
+        StringEquals:
+          ResourceType:
+            - AWS::EC2::Instance
+
+functions:
+  usersCreate: # A Function
+    handler: users.create
+    events: # The Events that trigger this Function
+      - http: post users/create
+  usersDelete: # A Function
+    handler: users.delete
+    events:  # The Events that trigger this Function
+      - http: delete users/delete
+
+# The "Resources" your "Functions" use.  Raw AWS CloudFormation goes in here.
+resources:
+  Resources:
+    usersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: usersTable
+        AttributeDefinitions:
+          - AttributeName: email
+            AttributeType: S
+        KeySchema:
+          - AttributeName: email
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
