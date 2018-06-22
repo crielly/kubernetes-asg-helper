@@ -1,4 +1,4 @@
-service: "${opt:project}"
+service: "${opt:project}-kube-api"
 
 provider:
   name: aws
@@ -43,5 +43,5 @@ provider:
     external_api_dns_prefix: "external"
 
 functions:
-  dnsmanager:
+  dns-manager:
     handler: k8sasghelper.lambda_handler
